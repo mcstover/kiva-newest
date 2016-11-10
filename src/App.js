@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import 'normalize.css';
 import './App.css';
 import _ from 'lodash';
-import Header from './header';
+import Header from './Header';
+import SelectedSort from './SelectedSort';
 
 class App extends Component {
   constructor(props) {
@@ -12,8 +13,8 @@ class App extends Component {
     this.state = {
       newestLoans: null,
       sortType: 'country',
-      countrySort: [],
-      sectorSort: []
+      country: null,
+      sector: null
     }
   }
 
@@ -23,8 +24,36 @@ class App extends Component {
   }
 
   createSortGroups = () => {
-    // console.log(this.state.newestLoans);
-    // console.log(_.last(this.state.newestLoans));
+    let countries = [];
+    let sectors = [];
+    const sortedLoans = this.state.newestLoans.map((loan, index) => {
+      // create object for each country if it doesn't exit
+      if (!_.find(countries, {'name': loan.location.country})) {
+        countries.push({'name': loan.location.country, 'loans': [loan]});
+        // console.log('created new country object for: ' +loan.location.country);
+      } else {
+        // Add loans to appropriate object in countries
+        _.find(countries, {'name': loan.location.country}).loans.push(loan);
+      }
+
+      // create object for each sector if it doesn't exit
+      if (!_.find(sectors, {'name': loan.sector})) {
+        sectors.push({'name': loan.sector, 'loans': [loan]});
+        // console.log('created new sector object for: ' +loan.sector);
+      } else {
+        // add loans to appropriate object and array for sectors
+        _.find(sectors, {'name': loan.sector}).loans.push(loan);
+      }
+    });
+
+    // console.log(countries);
+    // console.log(sectors);
+    this.setState({
+      country: countries,
+      sector: sectors
+    })
+    
+    return sortedLoans;
   }
 
   fetchData = (pageNumber) => {
@@ -48,33 +77,29 @@ class App extends Component {
     })
     .catch(function(err) {
       console.log(err);
+      return;
     });
+
+    return;
 
   }
 
+  // Gather and format data on inital mount
   componentDidMount() {
     this.fetchData();
   }
+
   componentDidUpdate(prevProps, prevState) {
     // console.log(prevProps);
     // console.log(prevState);
+    // console.log(this.state);
   }
 
   render() {
-    let renderedContent;
-    if (this.state.newestLoans !== null) {
-      renderedContent = this.state.newestLoans.map((loan, index) => {
-        return(
-          <div key={loan.id}>{loan.location.country} - {loan.sector}</div>
-        )
-      });
-    } else {
-      renderedContent = <small>Data is not available at this time.</small>;
-    }
     return (
       <div className="app-wrap">
         <Header sortType={this.state.sortType} onClick={(sortType) => this.handleSortClick(sortType)} />
-        {renderedContent}
+        <SelectedSort selectedLoanData={this.state[this.state.sortType]} />        
       </div>
     );
   }

@@ -1,6 +1,6 @@
 // header.js
 import React, { Component } from 'react';
-import './header.css';
+import './Header.css';
 
 class Sortbar extends Component {
   constructor(props) {
