@@ -1,16 +1,30 @@
 import React, { Component } from 'react';
 import 'normalize.css';
 import './App.css';
-
 import _ from 'lodash';
+import Header from './header';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.fetchData = this.fetchData.bind(this);
+    this.handleSortClick = this.handleSortClick.bind(this);
     this.state = {
-      newestLoans: null
+      newestLoans: null,
+      sortType: 'country',
+      countrySort: [],
+      sectorSort: []
     }
+  }
+
+  handleSortClick = (sortType) => {
+    console.log('Sort Type = '+sortType);
+    this.setState({ sortType: sortType });
+  }
+
+  createSortGroups = () => {
+    // console.log(this.state.newestLoans);
+    // console.log(_.last(this.state.newestLoans));
   }
 
   fetchData = (pageNumber) => {
@@ -29,6 +43,7 @@ class App extends Component {
     .then(function(json) {
       // console.log(json);
       _this.setState({ newestLoans: json.loans });
+      _this.createSortGroups();
       return json;
     })
     .catch(function(err) {
@@ -46,13 +61,11 @@ class App extends Component {
   }
 
   render() {
-    console.log('rendered');
-    console.log(this.state);
     let renderedContent;
     if (this.state.newestLoans !== null) {
       renderedContent = this.state.newestLoans.map((loan, index) => {
         return(
-          <div key={loan.id}>{loan.location.country}</div>
+          <div key={loan.id}>{loan.location.country} - {loan.sector}</div>
         )
       });
     } else {
@@ -60,7 +73,7 @@ class App extends Component {
     }
     return (
       <div className="app-wrap">
-        <h3>List</h3>
+        <Header sortType={this.state.sortType} onClick={(sortType) => this.handleSortClick(sortType)} />
         {renderedContent}
       </div>
     );

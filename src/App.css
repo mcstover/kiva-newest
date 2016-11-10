@@ -1,3 +1,7 @@
 /* App layout styles */
 
-.app-wrap {}
+.app-wrap {
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 1em;
+}
