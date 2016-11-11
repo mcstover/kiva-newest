@@ -26,7 +26,7 @@ class Sortbar extends Component {
         <li key={index} onClick={(e) => this.handleClick(e)}><button className={activeClass} name={sortType}>{sortType}</button></li>
       )
     });
-
+    // Render the content
     return (
       <div className="sortbar">
         <h4>Sort By:</h4>

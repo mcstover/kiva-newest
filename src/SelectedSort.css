@@ -1,19 +1,23 @@
 /* SelectedSort.css */
 
 .loan-viewer {
-
+  display: flex;
+  flex-direction: row;
 }
 
+/* Sort Type Selectors */
 .sorted-type-list {
-  width: 30vw;
+  width: 29%;
+  // min-width: 20%;
   list-style: none;
-  margin: 0;
-  padding: 0 2em 1em 0;
+  margin: 1em 0 0;
+  padding: 1%;
+  background-color: #eee;
 }
 .sorted-type-list li {
   margin: 0;
   padding: 0;
-  border-bottom: 1px solid #DDD;
+  border-bottom: 1px dotted #DDD;
 }
 .sorted-type-list li a {
   display: block;
@@ -27,7 +31,48 @@
   color: #222;
   text-decoration: underline;
 }
-.sorted-type-list li a.btn-active {
-  background-color: #cdeeb9;
-  border-color: #31a232;
+.sorted-type-list li a.link-active {
+  color: #31a232;
+}
+
+/* Loan Entry Listing */
+.sorted-loan-list {
+  width: 59%;
+  list-style: none;
+  margin: 1em;
+  padding: 0;
+}
+.sorted-loan-list li {
+  margin: 0;
+  padding: .8em 0;
+  text-decoration: none;
+  color: #666;
+  font-size: .9em;
+  border-bottom: 1px solid #DDD;
+}
+/* Loan Entry */
+.loan-entry h3 {
+  margin:0 0 1em;
+  color: #222;
+}
+.loan-entry h3 span {
+  color: #31a232;
+}
+.loan-entry p {
+  color: #333;
+}
+.loan-entry img {
+  display: block;
+  float: right ;
+  height: 80px;
+  width: auto;
+  margin: 0 0 0 12px;
+  padding: 0 0;
+  border: 1px solid #CCC;
+}
+
+@media (max-width: 500px) {
+  .loan-entry img {
+    display: none;
+  } 
 }

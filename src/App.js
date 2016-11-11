@@ -18,15 +18,18 @@ class App extends Component {
     }
   }
 
+  // handle sort click that bubbles up from the sort bar
+  // this enables us to set state at the top of the app to send down to any component
   handleSortClick = (sortType) => {
     console.log('Sort Type = '+sortType);
     this.setState({ sortType: sortType });
   }
 
+  // utility function to sort fetched data creating new objects for each type
   createSortGroups = () => {
     let countries = [];
     let sectors = [];
-    const sortedLoans = this.state.newestLoans.map((loan, index) => {
+    _.forEach(this.state.newestLoans, (loan, index) => {
       // create object for each country if it doesn't exit
       if (!_.find(countries, {'name': loan.location.country})) {
         countries.push({'name': loan.location.country, 'loans': [loan]});
@@ -49,19 +52,18 @@ class App extends Component {
     // console.log(countries);
     // console.log(sectors);
     this.setState({
-      country: countries,
-      sector: sectors
+      country: _.sortBy(countries, [function(o) { return o.loans.length; }]).reverse(),
+      sector: _.sortBy(sectors, [function(o) { return o.loans.length; }]).reverse()
     })
-    
-    return sortedLoans;
   }
 
+  // asynchronously fetch data from the api
   fetchData = (pageNumber) => {
     let _this = this;
-    // let url = 'https://api.kivaws.org/v1/loans/newest.json?page=' + page;
     // let url = 'http://api.kivaws.org/v1/loans/search.json?status=funded&sort=newest&per_page=100';
     let url = 'search-100-newest-funded-loans.json';
 
+    // trying out fetch
     fetch(url, {
       accept: 'application/json'
     })
@@ -79,9 +81,6 @@ class App extends Component {
       console.log(err);
       return;
     });
-
-    return;
-
   }
 
   // Gather and format data on inital mount
@@ -89,17 +88,11 @@ class App extends Component {
     this.fetchData();
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    // console.log(prevProps);
-    // console.log(prevState);
-    // console.log(this.state);
-  }
-
   render() {
     return (
       <div className="app-wrap">
         <Header sortType={this.state.sortType} onClick={(sortType) => this.handleSortClick(sortType)} />
-        <SelectedSort selectedLoanData={this.state[this.state.sortType]} />        
+        <SelectedSort selectedLoanData={this.state[this.state.sortType]} sortType={this.state.sortType} />        
       </div>
     );
   }
