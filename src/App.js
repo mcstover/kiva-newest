@@ -60,7 +60,7 @@ class App extends Component {
   // asynchronously fetch data from the api
   fetchData = (pageNumber) => {
     let _this = this;
-    let url = 'http://api.kivaws.org/v1/loans/search.json?status=funded&sort=newest&per_page=100';
+    let url = 'https://api.kivaws.org/v1/loans/search.json?status=funded&sort=newest&per_page=100';
     // let url = 'search-100-newest-funded-loans.json';
 
     // trying out fetch
